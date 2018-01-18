@@ -1,0 +1,5 @@
+ [requires]
+ SDL2/2.0.7@devbrain/stable
+
+ [generators]
+ cmake
