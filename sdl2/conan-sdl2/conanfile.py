@@ -4,11 +4,11 @@ import os
 
 class Sdl2Conan(ConanFile):
     name = "SDL2"
-    version = "2.0.7"
-    url = "https://github.com/bincrafters/conan-libname"
+    version = "2.0.12"
+    url = ""
     description = "Simple DirectMedia Layer is a cross-platform development library designed to provide low level " \
                   "access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D"
-    license = "hhttps://hg.libsdl.org/SDL/file/5c8fc26757d7/COPYING.txt"
+    license = "https://hg.libsdl.org/SDL/file/5c8fc26757d7/COPYING.txt"
     exports_sources = ["CMakeLists.txt", "LICENSE"]
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False],
@@ -118,7 +118,7 @@ class Sdl2Conan(ConanFile):
                        "rpath=True",
                        "sdl_dlopen=True",
                        "sdl_static_pic=False",
-                       "sndio=True",
+                       "sndio=False",
                        "sse=True",
                        "sse2=True",
                        "sse3=True",
@@ -163,7 +163,7 @@ class Sdl2Conan(ConanFile):
 
     def build(self):
         tools.replace_in_file(os.path.join('sources', 'CMakeLists.txt'),
-                              'install(FILES ${SDL2_BINARY_DIR}/libSDL2.${SOEXT} DESTINATION "lib${LIB_SUFFIX}")', '')
+                              'install(FILES ${SDL2_BINARY_DIR}/libSDL2${SOPOSTFIX}${SOEXT} DESTINATION "lib${LIB_SUFFIX}")', '')
         cmake = CMake(self)
         env = dict()
         
@@ -173,6 +173,7 @@ class Sdl2Conan(ConanFile):
         else:
             cmake.definitions["SDL_SHARED"] = False;
             cmake.definitions["SDL_STATIC"] = True;
+            cmake.definitions["FORCE_STATIC_VCRT"] = True;
             cmake.definitions["SDL_STATIC_PIC"] = self.options.pic;
             
 
@@ -242,7 +243,7 @@ class Sdl2Conan(ConanFile):
         cmake.definitions["WAYLAND_SHARED"] = self.map_value(self.options.wayland_shared)
         cmake.definitions["X11_SHARED"] = self.map_value(self.options.x11_shared)
 
-        #cmake.definitions["CMAKE_INSTALL_PREFIX"] = "product"
+        
 
         with tools.environment_append(env):
             cmake.configure(build_folder='build', source_folder='sources')
