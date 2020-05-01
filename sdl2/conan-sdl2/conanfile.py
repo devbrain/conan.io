@@ -4,7 +4,8 @@ import os
 
 class Sdl2Conan(ConanFile):
     name = "SDL2"
-    version = "2.0.12"
+    version = "2.0.12-1"
+    libversion = "2.0.12"
     url = ""
     description = "Simple DirectMedia Layer is a cross-platform development library designed to provide low level " \
                   "access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D"
@@ -151,9 +152,9 @@ class Sdl2Conan(ConanFile):
         del self.settings.compiler.libcxx
 
     def source(self):
-        source_url = "https://www.libsdl.org/release/SDL2-%s.tar.gz" % self.version
+        source_url = "https://www.libsdl.org/release/SDL2-%s.tar.gz" % self.libversion
         tools.get(source_url)
-        extracted_dir = "SDL2-" + self.version
+        extracted_dir = "SDL2-" + self.libversion
         os.rename(extracted_dir, "sources")
 
     def map_value (self, val) :
@@ -262,7 +263,7 @@ class Sdl2Conan(ConanFile):
         self.cpp_info.libs = tools.collect_libs(self)
         self.cpp_info.includedirs.append(os.path.join('include', 'SDL2'))
         if self.settings.os == "Linux":
-            self.cpp_info.libs.extend(['dl', 'rt', 'pthread', 'sndio'])
+            self.cpp_info.libs.extend(['dl', 'rt', 'pthread', 'sndio', 'm'])
             if self.options.alsa:
                 self.cpp_info.libs.append('asound')
             if self.options.jack:

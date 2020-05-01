@@ -26,6 +26,14 @@ conan_load_buildinfo ()
 
 conan_basic_setup(NO_OUTPUT_DIRS)
 
- add_executable(tut01 tut01.cpp)
- target_link_libraries(tut01 CONAN_PKG::SDL2)
+find_package(OpenGL REQUIRED)
+
+add_executable(tut01 tut01.cpp)
+target_link_libraries(tut01 PRIVATE CONAN_PKG::SDL2)
+
+
+add_executable(gl-example gl-example.c)
+target_link_libraries(gl-example PRIVATE CONAN_PKG::SDL2 OpenGL::GLU OpenGL::GL )
+
+
  
