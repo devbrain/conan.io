@@ -39,6 +39,7 @@ class ChaiscriptConan(ConanFile):
     def package_info(self):
         if self.settings.os == "Linux":
             self.cpp_info.libs.extend(['dl', 'pthread'])
+            self.cpp_info.system_libs.extend(['dl', 'pthread'])
             
     def package_id(self):
         self.info.header_only()
